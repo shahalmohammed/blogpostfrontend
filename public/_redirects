@@ -1,0 +1,2 @@
+# Match all routes and serve index.html (lets Next.js handle routing)
+/*    /index.html   200
