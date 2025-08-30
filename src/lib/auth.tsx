@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
 import { api } from './api';
 import type { User } from './types';
 
@@ -21,15 +21,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [tok, setTok] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // hydrate from localStorage on mount
   useEffect(() => {
     const t = localStorage.getItem('token');
     const u = localStorage.getItem('user');
     if (t) setTok(t);
-    if (u) setUser(JSON.parse(u));
+    if (u) setUser(JSON.parse(u) as User);
     setLoading(false);
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = useCallback(async (email: string, password: string) => {
     const r = await api<{ success: boolean; data: { user: User; token: string } }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password })
@@ -38,9 +39,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('user', JSON.stringify(r.data.user));
     setTok(r.data.token);
     setUser(r.data.user);
-  };
+  }, []);
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = useCallback(async (name: string, email: string, password: string) => {
     const r = await api<{ success: boolean; data: { user: User; token: string } }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ name, email, password })
@@ -49,25 +50,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('user', JSON.stringify(r.data.user));
     setTok(r.data.token);
     setUser(r.data.user);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setTok(null);
     setUser(null);
-  };
+  }, []);
 
-  const refreshMe = async () => {
+  const refreshMe = useCallback(async () => {
     if (!tok) return;
     const r = await api<{ success: boolean; data: { user: User } }>('/auth/me');
     localStorage.setItem('user', JSON.stringify(r.data.user));
     setUser(r.data.user);
-  };
+  }, [tok]);
 
-  const value = useMemo(() => ({ user, token: tok, loading, login, register, logout, refreshMe }), [user, tok, loading]);
+  const value = useMemo(
+    () => ({ user, token: tok, loading, login, register, logout, refreshMe }),
+    [user, tok, loading, login, register, logout, refreshMe]
+  );
+
   return <C.Provider value={value}>{children}</C.Provider>;
 }
+
 export function useAuth() {
   const v = useContext(C);
   if (!v) throw new Error('useAuth must be used inside AuthProvider');
