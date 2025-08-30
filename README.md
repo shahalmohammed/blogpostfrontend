@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Tech Stack
 
-## Getting Started
+- **Frontend:** Next.js, TypeScript, Tailwind CSS  
+- **Backend:** Express.js, Node.js, Mongoose
+- **Database:** MongoDB Atlas
+- **Authentication:** JWT
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Setup & Installation
+
+### 1. Clone the Repository
+git clone <repo-url>
+cd repo-root
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Backend Setup
+cd blog-backend
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### Create `.env` file inside `blog-backend/`:
+```env
+PORT=4000
+JWT_SECRET=superlongrandomjwtsecret_change_me
+JWT_EXPIRES_IN=7d
+MONGODB_URI=mongodb+srv://helpdeskshaan7_db_user:C7PFyvRuM2n1rhgh@cluster0.nyilg8r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+DB_NAME=blogapp
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Start the backend:
+npm run dev
+---
 
-## Learn More
+### 3. Frontend Setup
+cd blog-frontend
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Frontend will be live at: https://blogpostfrontend-bzgc-qvwai2rwy-shahals-projects-2a647e79.vercel.app/
+Backend will be live at:  https://blogpostbackend-fqyz.onrender.com/api
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Endpoints (Backend)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Authentication
+- `POST /api/auth/register` → Register new user  
+- `POST /api/auth/register-admin` → Create admin (only once, then admin-only)  
+- `POST /api/auth/login` → Login & get JWT  
+- `GET /api/auth/me` → Get current user  
+- `PUT /api/auth/me` → Update profile (name/email)  
+- `PUT /api/auth/me/password` → Change password  
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Posts
+- `GET /api/posts` → List all posts (public)  
+- `GET /api/posts/:id` → Get single post  
+- `POST /api/posts` → Create post (**auth**)  
+- `PUT /api/posts/:id` → Update post (owner/admin)  
+- `DELETE /api/posts/:id` → Delete post (owner/admin)  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+### Comments
+- `GET /api/posts/:id/comments` → List comments  
+- `POST /api/posts/:id/comments` → Add comment (**auth**)  
+- `DELETE /api/comments/:id` → Delete comment (owner/admin)  
+
+---
+
+### Users (Admin only)
+- `GET /api/users` → List users  
+- `PUT /api/users/:id` → Update user (e.g., role)  
+- `DELETE /api/users/:id` → Delete user  
+
+---
+
+## Deployment
+
+- **Backend:** Hosted on Render  
+- **Database:** MongoDB Atlas
+- **Frontend:** Hosted on Vercel
