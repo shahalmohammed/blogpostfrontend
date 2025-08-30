@@ -33,21 +33,16 @@ export default function RegisterPage() {
     setGeneralError(null);
 
     try {
-      // If it's already a parsed object
       let errorData = error;
-      
-      // If it's a string that looks like JSON, try to parse it
       if (typeof error === 'string') {
         try {
           errorData = JSON.parse(error);
         } catch {
-          // If parsing fails, treat as general error message
           setGeneralError(error);
           return;
         }
       }
 
-      // Handle structured validation errors
       if (errorData.details && Array.isArray(errorData.details)) {
         const fieldErrors: { [key: string]: string } = {};
         
@@ -65,12 +60,10 @@ export default function RegisterPage() {
         
         setErrors(fieldErrors);
       } else {
-        // Handle general error messages
         const message = errorData.message || errorData.error || 'Registration failed';
         setGeneralError(message);
       }
     } catch {
-      // Fallback for any parsing errors
       setGeneralError('An unexpected error occurred');
     }
   };

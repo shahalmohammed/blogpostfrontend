@@ -10,7 +10,6 @@ export default function CommentsSection({ postId }: { postId: string }) {
   return (
     <>
       <CommentForm postId={postId} onAdded={() => setRefreshKey(k => k + 1)} />
-      {/* key forces CommentList to re-mount and refetch */}
       <CommentList key={refreshKey} postId={postId} />
     </>
   );

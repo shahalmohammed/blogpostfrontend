@@ -92,7 +92,6 @@ export default function ProfilePage() {
     const changePassword = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // Keep a stable reference to the form before any awaits
         const formEl = e.currentTarget;
 
         const form = new FormData(formEl);
@@ -100,7 +99,6 @@ export default function ProfilePage() {
         const newPassword = (form.get('next') as string)?.trim();
         const confirmPassword = (form.get('confirm') as string)?.trim();
 
-        // Basic validations
         const fail = (title: string, text: string) =>
             Swal.fire({
                 title,
@@ -134,12 +132,9 @@ export default function ProfilePage() {
                 body: JSON.stringify({ currentPassword, newPassword })
             });
 
-            // If your api() returns the parsed JSON:
-            //   expect: { success: boolean, message?: string }
-            // If it throws on non-2xx, this next block is still safe.
-            if (res?.success === false) {
-                throw new Error(res?.message || 'Failed to change password.');
-            }
+            // if (res?.success === false) {
+            //     throw new Error(res?.message || 'Failed to change password.');
+            // }
 
             await Swal.fire({
                 title: 'Success!',
@@ -150,9 +145,7 @@ export default function ProfilePage() {
                 customClass: { popup: 'rounded-2xl' }
             });
 
-            // Safely reset/clear the form after async work
             formEl.reset();
-            // Optional: blur active element so password managers don’t keep values visible
             if (document.activeElement instanceof HTMLElement) {
                 document.activeElement.blur();
             }

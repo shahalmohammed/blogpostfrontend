@@ -22,7 +22,6 @@ export default function CommentList({ postId }: { postId: string }) {
             setPage(r.meta.page);
             setPages(r.meta.pages);
         } catch (error) {
-            // Error notification for loading
             Swal.fire({
                 title: 'Error!',
                 text: 'Failed to load comments. Please try again.',
@@ -39,7 +38,7 @@ export default function CommentList({ postId }: { postId: string }) {
         }
     }
 
-    useEffect(() => { load(1); }, [postId]); // eslint-disable-line
+    useEffect(() => { load(1); }, [postId]);
 
     const remove = async (id: string) => {
         const result = await Swal.fire({
@@ -65,7 +64,6 @@ export default function CommentList({ postId }: { postId: string }) {
             await api(`/comments/${id}`, { method: 'DELETE' });
             await load(page);
             
-            // Success notification
             Swal.fire({
                 title: 'Deleted!',
                 text: 'Comment has been deleted successfully.',
@@ -77,7 +75,6 @@ export default function CommentList({ postId }: { postId: string }) {
                 }
             });
         } catch (error) {
-            // Error notification
             Swal.fire({
                 title: 'Error!',
                 text: 'Failed to delete comment. Please try again.',
